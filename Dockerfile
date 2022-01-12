@@ -23,4 +23,4 @@ RUN dotnet publish "GitHubRepositoryInfo.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "GitHubRepositoryInfo.dll"]
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet GitHubRepositoryInfo.dll #ENTRYPOINT ["dotnet", "GitHubRepositoryInfo.dll"]
