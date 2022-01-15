@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using GitHubRepositoryInfo.Data;
 using GitHubRepositoryInfo.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -7,11 +8,11 @@ namespace GitHubRepositoryInfo.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class GitHubRepositoryController : ControllerBase
+public class GithubRepositoryController : ControllerBase
 {
-    private readonly ILogger<GitHubRepositoryController> _logger;
+    private readonly ILogger<GithubRepositoryController> _logger;
 
-    public GitHubRepositoryController(ILogger<GitHubRepositoryController> logger)
+    public GithubRepositoryController(ILogger<GithubRepositoryController> logger)
     {
         _logger = logger;
     }
@@ -39,9 +40,16 @@ public class GitHubRepositoryController : ControllerBase
         {
             var url = post.Url;
 
-            var gitHubPage = GitHubPage.Factory(url);
+            var githubPage = GithubPage.Factory(url);
 
-            var repositoryInfo = await gitHubPage.GetInfo();
+            var swFile = new Stopwatch();
+            swFile.Start();
+
+            var repositoryInfo = await githubPage.GetInfo();
+
+            swFile.Stop();
+            var timeSpan = swFile.Elapsed.ToString(@"m\:ss\.fff");
+            Console.WriteLine($"Url - Time taken: {timeSpan}");
 
             context.RepositoryInfoItems.Add(repositoryInfo);
 
