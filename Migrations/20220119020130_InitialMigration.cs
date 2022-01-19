@@ -5,7 +5,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace GitHubRepositoryInfo.Migrations
 {
-    public partial class MigracaoInicial : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -33,7 +33,7 @@ namespace GitHubRepositoryInfo.Migrations
                     Lines = table.Column<string>(type: "text", nullable: false),
                     Sloc = table.Column<string>(type: "text", nullable: false),
                     Bytes = table.Column<string>(type: "text", nullable: false),
-                    RepositoryInfoId = table.Column<long>(type: "bigint", nullable: true)
+                    RepositoryInfoId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -42,7 +42,8 @@ namespace GitHubRepositoryInfo.Migrations
                         name: "FK_FileInfoItems_RepositoryInfoItems_RepositoryInfoId",
                         column: x => x.RepositoryInfoId,
                         principalTable: "RepositoryInfoItems",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

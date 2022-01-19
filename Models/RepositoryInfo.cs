@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace GitHubRepositoryInfo.Models;
@@ -5,7 +6,7 @@ namespace GitHubRepositoryInfo.Models;
 public class RepositoryInfo
 {
     [Key]
-    public long Id { get; set; }
+    public long Id { get; protected set; }
     public string Url { get; set; }
-    public List<FileInfo> FileInfo { get; set; } = new();
+    public virtual ICollection<FileInfo> FileInfo { get; set; } = new Collection<FileInfo>();
 }

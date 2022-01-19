@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using GitHubRepositoryInfo.Data;
-using GitHubRepositoryInfo.Models;
 using GitHubRepositoryInfo.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,7 +39,7 @@ else
     var host = hostSide.Split("/")[0];
     var database = hostSide.Split("/")[1].Split("?")[0];
 
-    connectionString = $"Host={host};Database={database};Username={user};Password={password};SSL Mode=Require;Trust Server Certificate=true";
+    connectionString = $"Host={host};Database={database};Username={user};Password={password};sslmode=Require;Trust Server Certificate=true";
 }
 
 builder.Services.AddDbContext<DataContext>(opt => opt.UseNpgsql(connectionString));
@@ -53,6 +52,10 @@ builder.Services.AddHostedService<GithubPageInfoService>();
 builder.Services.AddScoped<IGithubPageInfoService, GithubPageInfoService>();
 
 var app = builder.Build();
+
+var serviceScope = builder.Services.BuildServiceProvider().GetService<IServiceScopeFactory>().CreateScope();
+var context = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
+context.Database.Migrate();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
